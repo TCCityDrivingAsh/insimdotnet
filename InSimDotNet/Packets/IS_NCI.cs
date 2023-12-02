@@ -1,13 +1,15 @@
 ﻿using System.Net;
 
-namespace InSimDotNet.Packets {
+namespace InSimDotNet.Packets
+{
     /// <summary>
     /// New Conn Info
     /// </summary>
     /// <remarks>
     /// Sent on host only if an admin password has been set.
     /// </remarks>
-    public class IS_NCI : IPacket {
+    public class IS_NCI : IPacket
+    {
         /// <summary>
         /// Gets the size of the packet.
         /// </summary>
@@ -26,12 +28,17 @@ namespace InSimDotNet.Packets {
         /// <summary>
         /// Gets the new connection's unique id (0 = host)
         /// </summary>
-        public byte UCID { get; private set; }		
+        public byte UCID { get; private set; }
 
         /// <summary>
         /// Gets the language.
         /// </summary>
         public LfsLanguage Language { get; private set; }
+
+        /// <summary>
+        /// Gets the license type of the user.
+        /// </summary>
+        public LfsLicense License { get; private set; }
 
         /// <summary>
         /// Gets the LFS user ID.
@@ -46,7 +53,8 @@ namespace InSimDotNet.Packets {
         /// <summary>
         /// Creates a new IS_NCI class.
         /// </summary>
-        public IS_NCI() {
+        public IS_NCI()
+        {
             Size = 16;
             Type = PacketType.ISP_NCI;
         }
@@ -55,14 +63,16 @@ namespace InSimDotNet.Packets {
         /// Creates a new IS_NCI class.
         /// </summary>
         /// <param name="buffer">The buffer containing the packet data.</param>
-        public IS_NCI(byte[] buffer):this() {
+        public IS_NCI(byte[] buffer) : this()
+        {
             PacketReader reader = new PacketReader(buffer);
             Size = reader.ReadSize();
             Type = (PacketType)reader.ReadByte();
             ReqI = reader.ReadByte();
             UCID = reader.ReadByte();
             Language = (LfsLanguage)reader.ReadByte();
-            reader.Skip(3);
+            License = (LfsLicense)reader.ReadByte();
+            reader.Skip(2);
             UserID = reader.ReadUInt32();
             IPAddress = new IPAddress(reader.ReadUInt32());
         }
